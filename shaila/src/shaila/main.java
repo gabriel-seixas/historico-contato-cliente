@@ -60,7 +60,7 @@ public class main extends Application {
         HBox formCadastro = new HBox(10, tfNome, tfTelefone, tfEmail, btnCadastrar);
         formCadastro.setPadding(new Insets(10));
 
-        // Campos separados para pesquisa
+        // campos separados para pesquisa igual o anterior
         tfPesquisaId = new TextField();
         tfPesquisaNome = new TextField();
         tfPesquisaTelefone = new TextField();
@@ -71,7 +71,7 @@ public class main extends Application {
         tfPesquisaTelefone.setPromptText("Pesquisar por Telefone");
         tfPesquisaEmail.setPromptText("Pesquisar por Email");
 
-        // Add listeners para filtrar ao digitar
+        // adiciona Listener para filtrar ao digitar
         tfPesquisaId.textProperty().addListener((obs, oldV, newV) -> aplicarFiltro());
         tfPesquisaNome.textProperty().addListener((obs, oldV, newV) -> aplicarFiltro());
         tfPesquisaTelefone.textProperty().addListener((obs, oldV, newV) -> aplicarFiltro());
@@ -98,7 +98,7 @@ public class main extends Application {
         HBox hboxBotoes = new HBox(10, btnEditar, btnExcluir, btnHistorico, btnExportar, btnImportar);
         hboxBotoes.setPadding(new Insets(10));
 
-        // Tabela de clientes
+        // tabela de clientes
         tableClientes = new TableView<>();
         TableColumn<Cliente, String> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -135,7 +135,7 @@ public class main extends Application {
             return;
         }
 
-        // Verifica email válido básico
+        // verifica email valido
         if (!email.contains("@") || !email.contains(".")) {
             showAlert(Alert.AlertType.ERROR, "Erro ao cadastrar", "Informe um email válido.");
             return;
@@ -233,7 +233,7 @@ public class main extends Application {
         Optional<Cliente> resultado = dialog.showAndWait();
 
         resultado.ifPresent(edited -> {
-            // Valida campos
+            // valida campos
             if (edited.getNome().isEmpty() || edited.getTelefone().isEmpty() || edited.getEmail().isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Erro", "Todos os campos devem estar preenchidos.");
                 return;
@@ -242,7 +242,7 @@ public class main extends Application {
                 showAlert(Alert.AlertType.ERROR, "Erro", "Informe um email válido.");
                 return;
             }
-            // Atualiza cliente
+            // atualiza o cliente selecionado
             selecionado.setNome(edited.getNome());
             selecionado.setTelefone(edited.getTelefone());
             selecionado.setEmail(edited.getEmail());
@@ -265,7 +265,7 @@ public class main extends Application {
         Optional<ButtonType> resposta = confirm.showAndWait();
         if (resposta.isPresent() && resposta.get() == ButtonType.OK) {
             clientes.remove(selecionado);
-            // Remove históricos associados
+            // remove historicos associados
             historicos.removeIf(h -> h.getClienteId() == selecionado.getId());
             aplicarFiltro();
         }
@@ -281,7 +281,7 @@ public class main extends Application {
         Stage stage = new Stage();
         stage.setTitle("Histórico de Contatos - Cliente: " + selecionado.getNome());
 
-        // Form para adicionar histórico
+        // form para adicionar histórico
         TextField tfMeioContato = new TextField();
         tfMeioContato.setPromptText("Meio de contato (ex: telefone, email)");
 
@@ -392,7 +392,7 @@ public class main extends Application {
         File arquivo = fileChooser.showSaveDialog(stage);
         if (arquivo != null) {
             try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(arquivo), StandardCharsets.UTF_8))) {
-                // Escreve clientes e históricos
+                // escreve clientes e históricos no arquivo, que pode ser aberto no excel
                 writer.println("CLIENTES");
                 writer.println("id;nome;telefone;email");
                 for (Cliente c : clientes) {
@@ -418,6 +418,7 @@ public class main extends Application {
         }
     }
 
+    
     private void importarCadastro(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Importar Cadastro");
@@ -509,7 +510,7 @@ public class main extends Application {
         alert.showAndWait();
     }
 
-// Classes internas para modelo Cliente e Histórico
+// classes internas para modelo Cliente e Historico
     public static class Cliente {
         private final int id;
         private String nome;
